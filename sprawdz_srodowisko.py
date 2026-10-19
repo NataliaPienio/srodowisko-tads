@@ -1,5 +1,5 @@
 
-"""Sprawdzenie poprawnosci przygotowania srodowiska pracy."""
+"""Sprawdzenie poprawnosci przygotowania srodowiska pracy (2 commit)."""
 
 import platform
 import shutil
@@ -59,4 +59,3 @@ def srednia(liczby):
 
 if __name__ == "__main__":
     sys.exit(main())
-    print(srednia([]))
