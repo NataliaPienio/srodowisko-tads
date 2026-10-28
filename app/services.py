@@ -1,5 +1,7 @@
 import csv
 
+_RAPORTY = []
+
 def wczytaj_zamowienia(sciezka):
     zamowienia = []
     with open(sciezka, mode="r", encoding="utf-8") as f:
@@ -14,10 +16,12 @@ def wczytaj_zamowienia(sciezka):
             })
     return zamowienia
 
+
 def dostepne_regiony(sciezka):
     zamowienia = wczytaj_zamowienia(sciezka)
     regiony = sorted(list({z["region"] for z in zamowienia}))
     return regiony
+
 
 def policz_wskazniki(sciezka, region=None):
     zamowienia = wczytaj_zamowienia(sciezka)
@@ -40,3 +44,13 @@ def policz_wskazniki(sciezka, region=None):
         "koszt": koszt,
         "marza": marza,
     }
+
+
+def zapisz_raport(rok, region):
+    rekord = {"rok": int(rok), "region": str(region)}
+    _RAPORTY.append(rekord)
+    return rekord
+
+
+def raporty_roku(rok):
+    return [r for r in _RAPORTY if r["rok"] == int(rok)]

@@ -1,6 +1,7 @@
 import logging
 from flask import Flask
 from .config import KONFIGURACJE
+from app.converters import RegionConverter
 
 def create_app(nazwa_konfiguracji="rozwojowa"):
     app = Flask(__name__)
@@ -9,6 +10,8 @@ def create_app(nazwa_konfiguracji="rozwojowa"):
 
     from .routes_api import api_bp
     from .routes_panel import panel_bp
+
+    app.url_map.converters["region"] = RegionConverter
 
     app.register_blueprint(panel_bp)
     app.register_blueprint(api_bp, url_prefix="/api")
