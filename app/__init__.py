@@ -1,9 +1,12 @@
+from datetime import date
 import logging
 import time
 from flask import Flask, g
 from .config import KONFIGURACJE
 from app.converters import RegionConverter
 from app.errors import zarejestruj_obsluge_bledow
+from app.filters import zarejestruj_filtry
+from app.services import dostepne_regiony
 
 
 def create_app(nazwa_konfiguracji="rozwojowa"):
@@ -30,6 +33,17 @@ def create_app(nazwa_konfiguracji="rozwojowa"):
 
     # Rejestracja centralnej obsługi błędów
     zarejestruj_obsluge_bledow(app)
+
+    # Zadanie 2: Rejestracja filtrów Jinja2
+    zarejestruj_filtry(app)
+
+    # Zadanie 2: Procesor kontekstu dostarczający wspólne dane do szablonów
+    @app.context_processor
+    def dane_wspolne():
+        return {
+            "regiony": dostepne_regiony(app.config["SCIEZKA_DANYCH"]),
+            "rok_biezacy": date.today().year,
+        }
 
     # Rejestracja blueprintów (w tym wersja v2 pod przedrostkiem /api/v2)
     app.register_blueprint(panel_bp)

@@ -45,6 +45,9 @@ def policz_wskazniki(sciezka, region=None):
         "marza": marza,
     }
 
+def zestawienie_regionow(sciezka):
+    regiony = dostepne_regiony(sciezka)
+    return [policz_wskazniki(sciezka, region=r) for r in regiony]
 
 def zapisz_raport(rok, region):
     rekord = {"rok": int(rok), "region": str(region)}
