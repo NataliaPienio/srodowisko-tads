@@ -7,6 +7,7 @@ from .services import (
     wczytaj_zamowienia,
     zestawienie_regionow,
 )
+from .forms import FiltrForm
 from datetime import date
 
 panel_bp = Blueprint("panel", __name__)
@@ -21,17 +22,23 @@ def index():
 
 @panel_bp.get("/kpi")
 def kpi():
-    region = request.args.get("region")
     sciezka = current_app.config["SCIEZKA_DANYCH"]
+    formularz = FiltrForm(request.args)
+    formularz.region.choices = [("", "wszystkie")] + [(r, r) for r in dostepne_regiony(sciezka)]
 
-    if region is not None and region not in dostepne_regiony(sciezka):
-        abort(404, description=f"Nieznany region: {region}")
+    region = rok = None
+    if formularz.validate():
+        region = formularz.region.data or None
+        rok = formularz.rok.data
+    else:
+        flash("Kryteria zawężenia zostały pominięte", "warning")
 
-    dane = policz_wskazniki(sciezka, region)
+    dane = policz_wskazniki(sciezka, region, rok)
     current_app.logger.info("Obliczono wskaźniki dla regionu %s", dane["region"])
 
     return render_template(
         "panel.html",
+        formularz=formularz,
         wskazniki=dane,
         zestawienie=zestawienie_regionow(sciezka),
         dzisiaj=date.today(),

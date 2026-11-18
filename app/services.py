@@ -23,10 +23,12 @@ def dostepne_regiony(sciezka):
     return regiony
 
 
-def policz_wskazniki(sciezka, region=None):
+def policz_wskazniki(sciezka, region=None, rok=None):
     zamowienia = wczytaj_zamowienia(sciezka)
     if region is not None:
         zamowienia = [z for z in zamowienia if z["region"] == region]
+    if rok is not None:
+        zamowienia = [z for z in zamowienia if z["data"].startswith(str(rok))]
 
     liczba = len(zamowienia)
     przychod = sum(z["przychod"] for z in zamowienia)
@@ -44,7 +46,6 @@ def policz_wskazniki(sciezka, region=None):
         "koszt": koszt,
         "marza": marza,
     }
-
 def zestawienie_regionow(sciezka):
     regiony = dostepne_regiony(sciezka)
     return [policz_wskazniki(sciezka, region=r) for r in regiony]
