@@ -50,11 +50,15 @@ def zestawienie_regionow(sciezka):
     regiony = dostepne_regiony(sciezka)
     return [policz_wskazniki(sciezka, region=r) for r in regiony]
 
-def zapisz_raport(rok, region):
-    rekord = {"rok": int(rok), "region": str(region)}
+def zapisz_raport(rok, region, uwagi=""):
+    rekord = {"rok": int(rok), "region": str(region), "uwagi": str(uwagi)}
     _RAPORTY.append(rekord)
     return rekord
 
 
 def raporty_roku(rok):
     return [r for r in _RAPORTY if r["rok"] == int(rok)]
+
+
+def wykaz_raportow():
+    return list(_RAPORTY)
