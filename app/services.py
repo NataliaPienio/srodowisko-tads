@@ -1,4 +1,5 @@
 import csv
+import io
 
 _RAPORTY = []
 
@@ -62,3 +63,18 @@ def raporty_roku(rok):
 
 def wykaz_raportow():
     return list(_RAPORTY)
+
+def wczytaj_zbior(strumien):
+    # Odczyt bajtów i dekodowanie UTF-8 (błąd automatycznie rzuci UnicodeDecodeError, który dziedziczy po ValueError)
+    zawartosc = strumien.read().decode("utf-8")
+    
+    czytnik = csv.DictReader(io.StringIO(zawartosc))
+    wymagane = {"data", "region", "przychod", "koszt"}
+    obecne = set(czytnik.fieldnames or [])
+    brakujace = sorted(wymagane - obecne)
+    
+    if brakujace:
+        raise ValueError(f"brak kolumn: {', '.join(brakujace)}")
+        
+    wiersze = list(czytnik)
+    return len(wiersze)
